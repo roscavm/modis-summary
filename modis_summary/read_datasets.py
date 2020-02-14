@@ -28,11 +28,13 @@ def open_data(images, geom, year):
     for idx, i in enumerate(images):
         if idx == 0:
             with rasterio.open(i) as src0:
-                data = rasterio.mask.mask(src0, geom, all_touched=True, crop=True)[0].astype(rasterio.float32)
+                data = rasterio.mask.mask(src0, geom, all_touched=True, crop=True)[0]\
+                       .astype(rasterio.float32)
 
         else:
             with rasterio.open(i) as src:
-                read_d = rasterio.mask.mask(src, geom, all_touched=True, crop=True)[0].astype(rasterio.float32)
+                read_d = rasterio.mask.mask(src, geom, all_touched=True, crop=True)[0]\
+                         .astype(rasterio.float32)
                 data = np.vstack((data, read_d))
 
     doys = _get_doys(images)
