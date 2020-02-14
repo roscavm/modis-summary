@@ -8,6 +8,7 @@ import rasterio.mask
 
 from calendar import isleap
 
+
 def open_data(images, geom, year):
     """
     Open the images and read using rasterio.
