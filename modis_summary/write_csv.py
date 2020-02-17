@@ -6,19 +6,17 @@ import get_stats
 
 def main(infolder, shapefile, outfile):
     """
-    Get summary statistics for the input image.
+    Write a csv file containing the summary statistics.
+
     Parameters
     ----------
-    image : Path
-        Path to tiff image.
+    infolder : Path
+        Path to folder containing all the required .tif image.
     shapefile : Path
         Path to shapefile.
-    Returns
-    -------
-    summary_stats : dictionary
-        Dictionary containing the year and day of acquisiton and summary statistics for the image.
-        Summary statistics included are:
-        count, minimum, 25th perce
+    outfile : Path
+        Path to desired output csv file.
+
     """
     images = pathlib.Path(infolder).glob('*.tif')
     csv_columns = ['year', 'doy', 'count', 'minimum', '25th_percentile', 'mean', 'median',

@@ -11,15 +11,18 @@ from shapely.geometry import mapping, shape
 
 def get_doy(image):
     """
-    Get the acquisition days of year for a list of input images.
+    Get the acquisition day of year of an input image based on the filename.
+
     Parameters
     ----------
     image : Path
         Path to tiff image.
+
     Returns
     -------
     doy : str
         Acquistiion day of year as string.
+
     """
     filepath = pathlib.Path(image)
     basename = filepath.name
@@ -30,15 +33,18 @@ def get_doy(image):
 
 def get_year(image):
     """
-    Get the acquisition years based on the filename of images in the input list.
+    Get the acquisition year of the image based on the filename.
+
     Parameters
     ----------
     image : Path
         Path to tiff image.
+
     Returns
     -------
     year : str
         Acquistiion year as string.
+
     """
     filepath = pathlib.Path(image)
     basename = filepath.name
@@ -49,21 +55,25 @@ def get_year(image):
 
 def open_data(image, shapefile):
     """
-    Open the images and read using rasterio.
+    Open the image and read using rasterio.
+
     Parameters
     ----------
     image : Path
         Path to tiff image.
     shapefile : Path
         Path to shapefile.
+
     Returns
     -------
     A : np.ndarray
         3darray of length 1. Size dependant on input image.
+
     Raises
     -------
     ValueError
         If the input file contains more than one band.
+
     """
     with rasterio.open(image) as src0:
         crs = src0.crs
@@ -82,23 +92,27 @@ def open_data(image, shapefile):
 
 
 def _transform_vector(shapefile, crs):
-    """Reads vector AOI bounds and reprojects to EPSG:4326. Returns bounds as shapely polygon.
+    """Reads vector AOI bounds and reprojects to desired crs. Returns bounds as shapely polygon.
+
     Parameters
     ----------
     shapefile : Path
         Path to vector AOI.
     crs : rasterio CRS string
         CRS to transform to.
+
     Returns
     -------
     shp : shapely object
         Infile AOI bounds as a shapely polygon object.
+
     Raises
     -------
     ValueError
         If the input shapefile contains more than one geometry.
     ValueError
         If the input file is not of an accepted file format.
+
     """
 
     vector_exts = ['.shp', '.geojson', '.json']

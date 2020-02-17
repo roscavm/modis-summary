@@ -5,19 +5,21 @@ import read_datasets
 
 def summary(image, shapefile):
     """
-    Get summary statistics for the input image.
+    Get summary statistics for the input image. Summary statistics included are:
+    count, minimum, 25th percentiel, mean, median, 75th percentile, maximum, standard deviation.
+
     Parameters
     ----------
     image : Path
         Path to tiff image.
     shapefile : Path
         Path to shapefile.
+
     Returns
     -------
     summary_stats : dictionary
         Dictionary containing the year and day of acquisiton and summary statistics for the image.
-        Summary statistics included are:
-        count, minimum, 25th percentiel, mean, median, 75th percentile, maximum, standard deviation.
+
     """
     data = read_datasets.open_data(image, shapefile)
     year = read_datasets.get_year(image)
