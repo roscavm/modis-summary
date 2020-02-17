@@ -2,6 +2,7 @@ import datetime
 import pathlib
 
 import fiona
+import numpy as np
 import rasterio
 import rasterio.mask
 
@@ -78,6 +79,7 @@ def open_data(image, shapefile):
     with rasterio.open(image) as src0:
         crs = src0.crs
         bands = src0.count
+        nd = src.nodatavals
 
     if bands != 1:
         raise ValueError(f'File not accepted. Only single band images allowed.')
@@ -87,6 +89,8 @@ def open_data(image, shapefile):
     with rasterio.open(image) as src:
         data = rasterio.mask.mask(src, geom, all_touched=True, crop=True)[0]\
                        .astype(rasterio.float32)
+
+    data[data == nd] = np.nodatavals
 
     return data
 
