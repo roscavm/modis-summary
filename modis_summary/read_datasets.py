@@ -79,7 +79,7 @@ def open_data(image, shapefile):
     with rasterio.open(image) as src0:
         crs = src0.crs
         bands = src0.count
-        nd = src.nodatavals
+        nd = src0.nodatavals
 
     if bands != 1:
         raise ValueError(f'File not accepted. Only single band images allowed.')
@@ -90,7 +90,7 @@ def open_data(image, shapefile):
         data = rasterio.mask.mask(src, geom, all_touched=True, crop=True)[0]\
                        .astype(rasterio.float32)
 
-    data[data == nd] = np.nodatavals
+    data[data == nd] = np.nan
 
     return data
 
