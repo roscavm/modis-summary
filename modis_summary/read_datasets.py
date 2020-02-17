@@ -29,9 +29,9 @@ def open_data(image, shape):
     """
     with rasterio.open(image) as src0:
         crs = src0.crs
-        shp = src0.shape
+        bands = src0.count
 
-    if shp[0] != 1:
+    if bands != 1:
         raise ValueError(f'File not accepted. Only single band images allowed.')
 
     geom = _transform_vector(shape, crs)
