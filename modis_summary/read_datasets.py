@@ -9,14 +9,52 @@ from fiona.transform import transform_geom
 from shapely.geometry import mapping, shape
 
 
-def open_data(image, shape):
+def get_doy(image):
+    """
+    Get the acquisition days of year for a list of input images.
+    Parameters
+    ----------
+    image : Path
+        Path to tiff image.
+    Returns
+    -------
+    doy : str
+        Acquistiion day of year as string.
+    """
+    filepath = pathlib.Path(image)
+    basename = filepath.name
+    doy = datetime.datetime.strptime(basename[0:8], '%Y%m%d').timetuple().tm_yday
+
+    return doy
+
+
+def get_year(image):
+    """
+    Get the acquisition years based on the filename of images in the input list.
+    Parameters
+    ----------
+    image : Path
+        Path to tiff image.
+    Returns
+    -------
+    year : str
+        Acquistiion year as string.
+    """
+    filepath = pathlib.Path(image)
+    basename = filepath.name
+    year = basename[0:4]
+
+    return year
+
+
+def open_data(image, shapefile):
     """
     Open the images and read using rasterio.
     Parameters
     ----------
     image : Path
         Path to tiff image.
-    shape : Path
+    shapefile : Path
         Path to shapefile.
     Returns
     -------
@@ -34,7 +72,7 @@ def open_data(image, shape):
     if bands != 1:
         raise ValueError(f'File not accepted. Only single band images allowed.')
 
-    geom = _transform_vector(shape, crs)
+    geom = _transform_vector(shapefile, crs)
 
     with rasterio.open(image) as src:
         data = rasterio.mask.mask(src, geom, all_touched=True, crop=True)[0]\
@@ -43,12 +81,14 @@ def open_data(image, shape):
     return data
 
 
-def _transform_vector(point, crs):
+def _transform_vector(shapefile, crs):
     """Reads vector AOI bounds and reprojects to EPSG:4326. Returns bounds as shapely polygon.
     Parameters
     ----------
-    infile : str
+    shapefile : Path
         Path to vector AOI.
+    crs : rasterio CRS string
+        CRS to transform to.
     Returns
     -------
     shp : shapely object
@@ -62,62 +102,18 @@ def _transform_vector(point, crs):
     """
 
     vector_exts = ['.shp', '.geojson', '.json']
-    ext = pathlib.Path(point).suffix
+    ext = pathlib.Path(shapefile).suffix
 
     if ext not in vector_exts:
         raise ValueError(f'File not accepted. Acceptable vector formats are {vector_exts}')
 
-    with fiona.open(point, encoding='utf-8') as c:
+    with fiona.open(shape, encoding='utf-8') as c:
         if len(c) > 1:
-            raise ValueError('Shapefile contains multiple points. '
-                             'Only single point shapefiles may be used as input.')
+            raise ValueError('File contains multiple features. '
+                             'Only single feature files may be used as input.')
 
         transformed = transform_geom(c.crs.get("init"), str(crs), c[0]['geometry'])
         shp = shape(transformed)
         geom = [mapping(shp)]
 
         return geom
-
-
-def _get_doys(images):
-    """
-    Get the acquisition days of year for a list of input images.
-    Parameters
-    ----------
-    images : list
-        List of paths for all images.
-    Returns
-    -------
-    doys : list
-        List of floats with acquistiion doy.
-    """
-    doys = []
-
-    for i in images:
-        doy = datetime.datetime.strptime(os.path.basename(i)[0:8], '%Y%m%d').timetuple().tm_yday
-        doy = float(doy)
-        doys.append(doy)
-
-    return doys
-
-
-def _get_years(images):
-    """
-    Get the acquisition years based on the filename of images in the input list.
-    Parameters
-    ----------
-    images : list
-        List of images.
-    Returns
-    -------
-    years : list
-        List of years are ints.
-    """
-    years = []
-
-    for i in images:
-        y = int(os.path.basename(i)[0:4])
-        if y not in years:
-            years.append(y)
-
-    return sorted(years)
