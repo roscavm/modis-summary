@@ -3,10 +3,6 @@ import csv
 
 import get_stats
 
-i = r'D:\stats_tests\i_tests'
-s = r'D:\stats_tests\shapefiles\single_polygon.shp'
-o = r'D:\stats_tests\shapefiles\single_polygon.csv'
-
 
 def main(infolder, shapefile, outfile):
     """
@@ -33,5 +29,3 @@ def main(infolder, shapefile, outfile):
         for i in images:
             stats = get_stats.summary(i, shapefile)
             writer.writerow(stats)
-
-main(i, s, o)

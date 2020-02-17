@@ -2,6 +2,7 @@ import numpy as np
 
 import read_datasets
 
+
 def summary(image, shapefile):
     """
     Get summary statistics for the input image.
