@@ -1,7 +1,7 @@
-import pathlib
 import csv
+import pathlib
 
-import get_stats
+from modis_summary import get_stats
 
 
 def main(infolder, shapefile, outfile):

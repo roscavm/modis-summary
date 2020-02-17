@@ -1,0 +1,13 @@
+name: modis_summary
+channels:
+    - conda-forge
+    - defaults
+dependencies:
+    - python=3
+    - click
+    - numpy
+    - rasterio
+    - fiona
+    - shapely
+    - pip:
+        - https://github.com/roscavm/modis-summary/archive/master.zip

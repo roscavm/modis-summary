@@ -1,6 +1,6 @@
 import numpy as np
 
-import read_datasets
+from modis_summary import read_datasets
 
 
 def summary(image, shapefile):
