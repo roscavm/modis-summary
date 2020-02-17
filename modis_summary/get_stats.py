@@ -13,11 +13,14 @@ def summary(image, shapefile):
         Path to shapefile.
     Returns
     -------
-    A_lot : np.ndarray
-        3darray of length 1. Size dependant on input image.
-    A_lot_more :
+    summary_stats : dictionary
+        Dictionary containing the year and day of acquisiton and summary statistics for the image.
+        Summary statistics included are:
+        count, minimum, 25th percentiel, mean, median, 75th percentile, maximum, standard deviation.
     """
     data = read_datasets.open_data(image, shapefile)
+    year = read_datasets.get_year(image)
+    doy = read_datasets.get_doy(image)
 
     count = np.count_nonzero(~np.isnan(data))
     minimum = np.nanmin(data)
@@ -28,7 +31,9 @@ def summary(image, shapefile):
     maximum = np.nanmax(data)
     stdev = np.nanstd(data)
 
-    summary_stats = {'count': count,
+    summary_stats = {'year': year,
+                     'doy': doy,
+                     'count': count,
                      'minimum': minimum,
                      '25th_percentile': p25,
                      'mean': mean,
