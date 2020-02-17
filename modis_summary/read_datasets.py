@@ -27,7 +27,7 @@ def get_doy(image):
     """
     filepath = pathlib.Path(image)
     basename = filepath.name
-    doy = datetime.datetime.strptime(basename[0:8], '%Y%m%d').timetuple().tm_yday
+    doy = str(datetime.datetime.strptime(basename[0:8], '%Y%m%d').timetuple().tm_yday)
 
     return doy
 

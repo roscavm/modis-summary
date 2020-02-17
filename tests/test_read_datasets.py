@@ -1,15 +1,15 @@
 from modis_summary import read_datasets
 
-from .data import TIFFILES
+from .data import TIFFILE
 
 
-def test_get_years():
-    years = read_datasets._get_years(TIFFILES)
+def test_get_year():
+    year = read_datasets.get_year(TIFFILE[0])
 
-    assert years == [2000, 2003]
+    assert year == '2000'
 
 
-def test_get_doys():
-    doys = read_datasets._get_doys(TIFFILES)
+def test_get_doy():
+    doy = read_datasets.get_doy(TIFFILE[0])
 
-    assert doys == [365, 1]
+    assert doy == '365'

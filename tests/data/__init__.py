@@ -3,4 +3,4 @@ import glob
 
 here = os.path.abspath(os.path.dirname(__file__))
 
-TIFFILES = glob.glob(os.path.join(here, '*.tif'))
+TIFFILE = glob.glob(os.path.join(here, '*.tif'))
