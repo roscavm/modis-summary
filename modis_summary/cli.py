@@ -22,13 +22,13 @@ def summary(**kwargs):
     YEAR - The year of acquisition for the image. \n
     DOY - The day of year of acquisition for the image. \n
     COUNT - The number of valid pixels within the area of interest. \n
-    MIN - The minimum value of a pixel within the area of interest. \n
+    MINIMUM - The minimum value of a pixel within the area of interest. \n
     25TH_PERCENTILE - The 25th percentile value of all valid pixels within the area of interest. \n
     MEAN - The mean value of all valid pixels within the area of interest. \n
     MEDIAN - The median value of all valid pixels within the area of interest. \n
     75TH_PERCENTILE - The 75th percentile value of all valid pixels within the area of interest. \n
-    MAX - The maximum value of a pixel within the area of interest. \n
-    SD - The standard deviation value all valid pixels within the area of interest. \n
+    MAXIMUM - The maximum value of a pixel within the area of interest. \n
+    STDEV - The standard deviation value all valid pixels within the area of interest. \n
 
     Example use:
 

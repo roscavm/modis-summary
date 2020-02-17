@@ -56,7 +56,7 @@ Commands:
 
 ### Individual Commands
 
-The individual commands available within tidepods are: `summary`
+The individual commands available within modis_summary are: `summary`
 
 ```
 modis_summary summary --help
@@ -68,16 +68,16 @@ Usage: modis_summary summary [OPTIONS]
   the chosen point. The following output statistics are generated for each
   year in the timeseries:
 
-  YEAR - The year of acquisition for the image. DOY - The day of year of
-  acquisition for the image. COUNT - The number of valid pixels within the
-  area of interest. MIN - The minimum value of a pixel within the area of
-  interest. 25TH_PERCENTILE - The 25th percentile value of all valid pixels
-  within the area of interest. MEAN - The mean value of all valid pixels
-  within the area of interest. MEDIAN - The median value of all valid pixels
-  within the area of interest. 75TH_PERCENTILE - The 75th percentile value
-  of all valid pixels within the area of interest. MAX - The maximum value
-  of a pixel within the area of interest. SD - The standard deviation value
-  all valid pixels within the area of interest.
+  YEAR - The year of acquisition for the image.
+  DOY - The day of year of acquisition for the image.
+  COUNT - The number of valid pixels within the area of interest.
+  MINIMUM - The minimum value of a pixel within the area of interest.
+  25TH_PERCENTILE - The 25th percentile value of all valid pixels within the area of interest.
+  MEAN - The mean value of all valid pixels within the area of interest.
+  MEDIAN - The median value of all valid pixels within the area of interest.
+  75TH_PERCENTILE - The 75th percentile value of all valid pixels within the area of interest.
+  MAXIMUM - The maximum value of a pixel within the area of interest.
+  STDEV - The standard deviation value all valid pixels within the area of interest.
 
   Example use:
 
