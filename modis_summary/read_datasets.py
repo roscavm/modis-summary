@@ -107,13 +107,14 @@ def _transform_vector(shapefile, crs):
     if ext not in vector_exts:
         raise ValueError(f'File not accepted. Acceptable vector formats are {vector_exts}')
 
-    with fiona.open(shape, encoding='utf-8') as c:
+    with fiona.open(shapefile) as c:
         if len(c) > 1:
             raise ValueError('File contains multiple features. '
                              'Only single feature files may be used as input.')
 
         transformed = transform_geom(c.crs.get("init"), str(crs), c[0]['geometry'])
-        shp = shape(transformed)
-        geom = [mapping(shp)]
 
-        return geom
+    shp = shape(transformed)
+    geom = [mapping(shp)]
+
+    return geom
