@@ -7,6 +7,7 @@ dependencies:
     - click
     - fiona
     - numpy
+    - pip
     - rasterio
     - shapely
     - pip:
