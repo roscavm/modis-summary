@@ -1,72 +1,82 @@
 import datetime
-import os
+import pathlib
 
-import geopandas as gpd
-import numpy as np
+import fiona
 import rasterio
 import rasterio.mask
 
-from calendar import isleap
+from fiona.transform import transform_geom
+from shapely.geometry import mapping, shape
 
 
-def open_data(images, geom, year):
+def open_data(image, shape):
     """
     Open the images and read using rasterio.
     Parameters
     ----------
-    images : list
-        List of images.
-    geom : shapely mapping(object)
-        Shapely map object to use as mask.
-    year: int
-        Year of acquisiton.
-    Returns
-    -------
-    A : np.ndarray
-        3darray of length 365 or 366 depending if leap year or not. Size dependant on input images.
-    """
-    for idx, i in enumerate(images):
-        if idx == 0:
-            with rasterio.open(i) as src0:
-                data = rasterio.mask.mask(src0, geom, all_touched=True, crop=True)[0]\
-                       .astype(rasterio.float32)
-
-        else:
-            with rasterio.open(i) as src:
-                read_d = rasterio.mask.mask(src, geom, all_touched=True, crop=True)[0]\
-                         .astype(rasterio.float32)
-                data = np.vstack((data, read_d))
-
-    doys = _get_doys(images)
-
-    if isleap(year):
-        A = np.empty((366, data.shape[1], data.shape[2]))
-    else:
-        A = np.empty((365, data.shape[1], data.shape[2]))
-
-    A[:] = np.nan
-
-    for i, d in enumerate(doys):
-        A[int(d-1)] = data[i]
-
-    return A
-
-
-def read_shapefile(infile):
-    """
-    Read the input shapefile as gpd dataframe indexed on the 'COUNTRY' field.
-    Parameters
-    ----------
-    infile : os.PathLike
+    image : Path
+        Path to tiff image.
+    shape : Path
         Path to shapefile.
     Returns
     -------
-    shapefile : gpd.geodataframe.GeoDataFrame
-        Shapefile as geopandas geodataframe.
+    A : np.ndarray
+        3darray of length 1. Size dependant on input image.
+    Raises
+    -------
+    ValueError
+        If the input file contains more than one band.
     """
-    shapefile = gpd.read_file(infile)
+    with rasterio.open(image) as src0:
+        crs = src0.crs
+        shp = src0.shape
 
-    return shapefile
+    if shp[0] != 1:
+        raise ValueError(f'File not accepted. Only single band images allowed.')
+
+    geom = _transform_vector(shape, crs)
+
+    with rasterio.open(image) as src:
+        data = rasterio.mask.mask(src, geom, all_touched=True, crop=True)[0]\
+                       .astype(rasterio.float32)
+
+    return data
+
+
+def _transform_vector(point, crs):
+    """Reads vector AOI bounds and reprojects to EPSG:4326. Returns bounds as shapely polygon.
+    Parameters
+    ----------
+    infile : str
+        Path to vector AOI.
+    Returns
+    -------
+    shp : shapely object
+        Infile AOI bounds as a shapely polygon object.
+    Raises
+    -------
+    ValueError
+        If the input shapefile contains more than one geometry.
+    ValueError
+        If the input file is not of an accepted file format.
+    """
+
+    vector_exts = ['.shp', '.geojson', '.json']
+    ext = pathlib.Path(point).suffix
+
+    if ext not in vector_exts:
+        raise ValueError(f'File not accepted. Acceptable vector formats are {vector_exts}')
+
+    with fiona.open(point, encoding='utf-8') as c:
+        if len(c) > 1:
+            raise ValueError('Shapefile contains multiple points. '
+                             'Only single point shapefiles may be used as input.')
+
+        transformed = transform_geom(c.crs.get("init"), str(crs), c[0]['geometry'])
+        shp = shape(transformed)
+        geom = [mapping(shp)]
+
+        return geom
 
 
 def _get_doys(images):
