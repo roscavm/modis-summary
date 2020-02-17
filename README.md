@@ -81,8 +81,7 @@ Usage: modis_summary summary [OPTIONS]
 
   Example use:
 
-  modstats summary -i 'C:/DATA' -s 'C:/AOI/point_of_interest.shp' -o
-  'C:/OUTPUT/stats.csv'
+  modstats summary -i 'C:/DATA' -s 'C:/AOI/point_of_interest.shp' -o 'C:/OUTPUT/stats.csv'
 
 Options:
   -i, --infolder PATH   Path to folder containing timeseries of hdf files.
