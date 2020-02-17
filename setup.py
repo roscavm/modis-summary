@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='modis-summary',
+    name='modis_summary',
     version='0.1.0',
     description='Create summary statistics from a timeseries of MODIS datasets',
     author='Mike Rosca',
@@ -10,6 +10,6 @@ setup(
     include_package_data=True,
     entry_points='''
         [console_scripts]
-        summary=summary.cli:cli
+        modis_summary=modis_summary.cli:cli
     '''
 )

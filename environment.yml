@@ -5,9 +5,10 @@ channels:
 dependencies:
     - python=3
     - click
-    - numpy
-    - rasterio
     - fiona
+    - numpy
+    - pip
+    - rasterio
     - shapely
     - pip:
         - https://github.com/roscavm/modis-summary/archive/master.zip
