@@ -1,9 +1,7 @@
 import numpy as np
 
-from modis_summary import read_datasets
 
-
-def summary(image, shapefile):
+def summary(data):
     """
     Get summary statistics for the input image. Summary statistics included are:
     count, minimum, 25th percentiel, mean, median, 75th percentile, maximum, standard deviation.
@@ -21,9 +19,6 @@ def summary(image, shapefile):
         Dictionary containing the year and day of acquisiton and summary statistics for the image.
 
     """
-    data = read_datasets.open_data(image, shapefile)
-    year = read_datasets.get_year(image)
-    doy = read_datasets.get_doy(image)
 
     count = np.count_nonzero(~np.isnan(data))
     minimum = np.nanmin(data)
@@ -34,9 +29,7 @@ def summary(image, shapefile):
     maximum = np.nanmax(data)
     stdev = np.nanstd(data)
 
-    summary_stats = {'year': year,
-                     'doy': doy,
-                     'count': count,
+    summary_stats = {'count': count,
                      'minimum': minimum,
                      '25th_percentile': p25,
                      'mean': mean,

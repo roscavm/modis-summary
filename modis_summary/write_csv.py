@@ -1,7 +1,7 @@
 import csv
 import pathlib
 
-from modis_summary import get_stats
+from modis_summary import get_stats, read_datasets
 
 
 def main(infolder, shapefile, outfile):
@@ -25,5 +25,10 @@ def main(infolder, shapefile, outfile):
         writer = csv.DictWriter(csvfile, fieldnames=csv_columns)
         writer.writeheader()
         for i in images:
-            stats = get_stats.summary(i, shapefile)
+            data = read_datasets.open_data(i, shapefile)
+            year = read_datasets.get_year(i)
+            doy = read_datasets.get_doy(i)
+            stats = get_stats.summary(data)
+            stats['year'] = year
+            stats['doy'] = doy
             writer.writerow(stats)
