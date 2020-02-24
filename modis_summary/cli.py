@@ -9,7 +9,7 @@ def cli():
 
 @cli.command()
 @click.option('-i', '--infolder', type=click.Path(dir_okay=True, exists=True), required=True,
-              help='Path to folder containing timeseries of hdf files. e.g. C:/DATA')
+              help='Path to folder containing timeseries of .tif files. e.g. C:/DATA')
 @click.option('-s', '--shapefile', type=click.Path(dir_okay=False, exists=True), required=True,
               help='Path to shapefile or geojson containing the area of interest. '
               'e.g. C:/AOI/point_of_interest.shp')
