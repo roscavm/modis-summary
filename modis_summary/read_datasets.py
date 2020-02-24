@@ -10,6 +10,49 @@ from fiona.transform import transform_geom
 from shapely.geometry import mapping, shape
 
 
+def transform_vector(shapefile, crs):
+    """Reads vector AOI bounds and reprojects to desired crs. Returns bounds as shapely polygon.
+
+    Parameters
+    ----------
+    shapefile : Path
+        Path to vector AOI.
+    crs : rasterio CRS string
+        CRS to transform to.
+
+    Returns
+    -------
+    shp : shapely object
+        Infile AOI bounds as a shapely polygon object.
+
+    Raises
+    -------
+    ValueError
+        If the input shapefile contains more than one geometry.
+    ValueError
+        If the input file is not of an accepted file format.
+
+    """
+
+    vector_exts = ['.shp', '.geojson', '.json']
+    ext = pathlib.Path(shapefile).suffix
+
+    if ext not in vector_exts:
+        raise ValueError(f'File not accepted. Acceptable vector formats are {vector_exts}')
+
+    with fiona.open(shapefile) as c:
+        if len(c) > 1:
+            raise ValueError('File contains multiple features. '
+                             'Only single feature files may be used as input.')
+
+        transformed = transform_geom(c.crs.get("init"), str(crs), c[0]['geometry'])
+
+    shp = shape(transformed)
+    geom = [mapping(shp)]
+
+    return geom
+
+
 def get_doy(image):
     """
     Get the acquisition day of year of an input image based on the filename.
@@ -84,7 +127,7 @@ def open_data(image, shapefile):
     if bands != 1:
         raise ValueError(f'File not accepted. Only single band images allowed.')
 
-    geom = _transform_vector(shapefile, crs)
+    geom = transform_vector(shapefile, crs)
 
     with rasterio.open(image) as src:
         data = rasterio.mask.mask(src, geom, all_touched=True, crop=True)[0]\
@@ -93,46 +136,3 @@ def open_data(image, shapefile):
     data[data == nd] = np.nan
 
     return data
-
-
-def _transform_vector(shapefile, crs):
-    """Reads vector AOI bounds and reprojects to desired crs. Returns bounds as shapely polygon.
-
-    Parameters
-    ----------
-    shapefile : Path
-        Path to vector AOI.
-    crs : rasterio CRS string
-        CRS to transform to.
-
-    Returns
-    -------
-    shp : shapely object
-        Infile AOI bounds as a shapely polygon object.
-
-    Raises
-    -------
-    ValueError
-        If the input shapefile contains more than one geometry.
-    ValueError
-        If the input file is not of an accepted file format.
-
-    """
-
-    vector_exts = ['.shp', '.geojson', '.json']
-    ext = pathlib.Path(shapefile).suffix
-
-    if ext not in vector_exts:
-        raise ValueError(f'File not accepted. Acceptable vector formats are {vector_exts}')
-
-    with fiona.open(shapefile) as c:
-        if len(c) > 1:
-            raise ValueError('File contains multiple features. '
-                             'Only single feature files may be used as input.')
-
-        transformed = transform_geom(c.crs.get("init"), str(crs), c[0]['geometry'])
-
-    shp = shape(transformed)
-    geom = [mapping(shp)]
-
-    return geom
