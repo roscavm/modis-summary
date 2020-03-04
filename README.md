@@ -84,7 +84,7 @@ Usage: modis_summary summary [OPTIONS]
   modstats summary -i 'C:/DATA' -s 'C:/AOI/point_of_interest.shp' -o 'C:/OUTPUT/stats.csv'
 
 Options:
-  -i, --infolder PATH   Path to folder containing timeseries of hdf files.
+  -i, --infolder PATH   Path to folder containing timeseries of tif files.
                         e.g. C:/DATA  [required]
   -s, --shapefile FILE  Path to shapefile or geojson containing the area of
                         interest. e.g. C:/AOI/point_of_interest.shp
